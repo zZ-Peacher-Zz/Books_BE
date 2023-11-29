@@ -4,15 +4,23 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
+class ActorModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    
+    def __repr__(self) -> str:
+        return f"Actor name is {self.name}"
+
 class BookModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.String(20), nullable=False)
-    
+    actor = db.relationship('ActorModel', backref=db.backref('books'))
+    actor_id = db.Column(db.Integer, db.ForeignKey('actor_model.id'))
+
     def __repr__(self):
         return f"Books(name = {self.name})"
-    
-    
+      
 
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -34,7 +42,6 @@ class UserModel(db.Model):
     
     def __repr__(self) -> str:
         return f"User name {self.username}, email: {self.email}, id: {self.id}"
-    
     
 
     
